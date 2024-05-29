@@ -17,6 +17,7 @@ public class LoginTest {
     WebElement usernameField;
     WebElement passwordField;
     WebElement loginBtn;
+    WebElement errorContainer;
 
     @BeforeMethod
     public void beforeEach(){
@@ -34,41 +35,50 @@ public class LoginTest {
         usernameField.sendKeys(User.VALID_USERNAME);
         passwordField.sendKeys(User.VALID_PASSWORD);
         loginBtn.click();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
         Assert.assertEquals(driver.getCurrentUrl(), Pages.PRODUCTS_URL);
     }
 
     @Test
     public void invalidLoginCredentials(){
+        errorContainer = driver.findElement(By.cssSelector(".error-message-container"));
+        Assert.assertTrue(errorContainer.getText().isEmpty());
         usernameField.sendKeys(User.INVALID_USERNAME);
         passwordField.sendKeys(User.INVALID_PASSWORD);
         loginBtn.click();
-        WebElement errorContainer = driver.findElement(By.cssSelector(".error-message-container"));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
         Assert.assertFalse(errorContainer.getText().isEmpty());
         Assert.assertEquals(errorContainer.getText(), "Epic sadface: Username and password do not match any user in this service");
     }
 
     @Test
     public void withoutLoginCredentials(){
+        errorContainer = driver.findElement(By.cssSelector(".error-message-container"));
+        Assert.assertTrue(errorContainer.getText().isEmpty());
         loginBtn.click();
-        WebElement errorContainer = driver.findElement(By.cssSelector(".error-message-container"));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
         Assert.assertFalse(errorContainer.getText().isEmpty());
         Assert.assertEquals(errorContainer.getText(), "Epic sadface: Username is required");
     }
 
     @Test
     public void noUsernameLoginCredentials(){
+        errorContainer = driver.findElement(By.cssSelector(".error-message-container"));
+        Assert.assertTrue(errorContainer.getText().isEmpty());
         passwordField.sendKeys(User.VALID_PASSWORD);
         loginBtn.click();
-        WebElement errorContainer = driver.findElement(By.cssSelector(".error-message-container"));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
         Assert.assertFalse(errorContainer.getText().isEmpty());
         Assert.assertEquals(errorContainer.getText(), "Epic sadface: Username is required");
     }
 
     @Test
     public void noPasswordLoginCredentials(){
+        errorContainer = driver.findElement(By.cssSelector(".error-message-container"));
+        Assert.assertTrue(errorContainer.getText().isEmpty());
         usernameField.sendKeys(User.VALID_USERNAME);
         loginBtn.click();
-        WebElement errorContainer = driver.findElement(By.cssSelector(".error-message-container"));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
         Assert.assertFalse(errorContainer.getText().isEmpty());
         Assert.assertEquals(errorContainer.getText(), "Epic sadface: Password is required");
     }
